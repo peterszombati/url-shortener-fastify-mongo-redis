@@ -3,7 +3,7 @@ import { toBase62 } from '../utils/toBase62';
 
 export function longToShort(
   longUrl: string,
-  indexRange: [number, number] /* 0-238326*/,
+  indexRange: [number, number] /* 0-238326*/, // index range is for make possible to run on different nodes perfectly not to generate the same number in the same time
 ): {
   generatedId: number;
   shortened: string;
