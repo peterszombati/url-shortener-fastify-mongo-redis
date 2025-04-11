@@ -5,7 +5,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/peterszombati/url-shortener.git"
+    "url": "git+https://github.com/peterszombati/url-shortener-fastify-mongo"
   },
   "author": "Peter Szombati",
   "dependencies": {
