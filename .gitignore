@@ -1,3 +1,4 @@
 /.idea
 /nodejs/dist
 /nodejs/node_modules
+/nodejs/package-lock.json
