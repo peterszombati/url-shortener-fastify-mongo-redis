@@ -1,28 +1,35 @@
-import {rateLimit} from "./rateLimit";
-import {url} from "./db/url";
-import {rateLimitSave} from "./rateLimitSave";
-import {ClientSession} from "mongoose";
+import { rateLimit } from './rateLimit';
+import { url } from './db/url';
+import { rateLimitSave } from './rateLimitSave';
+import { ClientSession } from 'mongoose';
 
-export async function saveURL({longUrl, alias, generatedId, userId, expireAt, session}: {
-  longUrl: string,
-  alias: string,
-  generatedId?: number | undefined,
-  userId: string
-  expireAt: Date
-  session: ClientSession | null
+export async function saveURL({
+  longUrl,
+  alias,
+  generatedId,
+  userId,
+  expireAt,
+  session,
+}: {
+  longUrl: string;
+  alias: string;
+  generatedId?: number | undefined;
+  userId: string;
+  expireAt: Date;
+  session: ClientSession | null;
 }) {
-  await rateLimit(userId)
+  await rateLimit(userId);
 
-  const newUrl = new (url.model)({
+  const newUrl = new url.model({
     alias,
     longUrl,
     generatedId,
     userId,
     createdAt: new Date(),
-    expireAt
+    expireAt,
   });
 
-  await newUrl.save({session})
-  rateLimitSave(userId, session).catch(e => console.error(e))
-  return alias
+  await newUrl.save({ session });
+  rateLimitSave(userId, session).catch((e) => console.error(e));
+  return alias;
 }
