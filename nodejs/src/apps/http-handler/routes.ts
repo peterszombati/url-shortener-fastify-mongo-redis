@@ -1,9 +1,10 @@
 import {FastifyInstance, FastifyRequest} from "fastify";
 import {resolveURL} from "../url-shortener/resolveURL";
 import {apiKeyAuthentication as auth} from "../api-key-authentication/middleware";
-import {createURL} from "../url-shortener/createURL";
 import {ResponseError} from "./ResponseError";
 import {handleAnalytics} from "../analytics/handleAnalytics";
+import {createCustomURL} from "../url-shortener/createCustomURL";
+import {generateURL} from "../url-shortener/generateURL";
 
 export const routes = async (app: FastifyInstance) => {
   app.post<{
@@ -16,16 +17,28 @@ export const routes = async (app: FastifyInstance) => {
       if (isNaN(new Date(req.body.expiresAt).getTime())) {
         throw new ResponseError({statusCode: 400, message: "invalid request body"})
       }
+      if (new Date(req.body.expiresAt).getTime() < new Date().getTime()) {
+        throw new ResponseError({statusCode: 400, message: "expireAt is expired"})
+      }
     }
     if (req.body.customAlias) {
       if (typeof req.body.customAlias != "string") {
         throw new ResponseError({statusCode: 400, message: "invalid request body"})
       }
     }
-    const alias = await createURL(req.body.originalUrl as string, req.context?.["api-key-authentication"].userId, {
-      expireAt: req.body.expiresAt ? new Date(req.body.expiresAt) : undefined,
-      customAlias: req.body.customAlias || undefined,
-    })
+
+    let alias;
+    if (req.body.customAlias) {
+      alias = await createCustomURL(req.body.originalUrl as string, req.context?.["api-key-authentication"].userId, {
+        expireAt: req.body.expiresAt ? new Date(req.body.expiresAt) : undefined,
+        customAlias: req.body.customAlias,
+      })
+    } else {
+      alias = await generateURL(req.body.originalUrl as string, req.context?.["api-key-authentication"].userId, {
+        expireAt: req.body.expiresAt ? new Date(req.body.expiresAt) : undefined,
+      })
+    }
+
     return {shortUrl: "http://localhost:3000/" + alias}
   })
   /*

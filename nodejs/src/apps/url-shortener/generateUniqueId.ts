@@ -1,7 +1,7 @@
 import {url} from "./db/url";
 import {ResponseError} from "../http-handler/ResponseError";
 
-export const generateUniqueId = async (id?: number): Promise<number> => {
+export const generateUniqueId = async (id?: number, indexRange: [number, number]): Promise<number> => {
   let exists = true
   let uniqueId = id;
   let tried = 0;
