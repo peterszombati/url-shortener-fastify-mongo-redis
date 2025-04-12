@@ -13,7 +13,7 @@ export function calculateIdFromNumberArrayAndRange(numbers: number[], indexRange
 
   const max = numbers.slice(0, bytesCanBeUsed).reduce((_p, _c, i) => 255 * Math.pow(256, i));
   const divider = max / range
-  const generatedId = numbers.slice(0, bytesCanBeUsed).reduce((p, c, i) => p + c * Math.pow(256, i)) / divider;
+  const generatedId = Math.floor(numbers.slice(0, bytesCanBeUsed).reduce((p, c, i) => p + c * Math.pow(256, i)) / divider);
   return {
     result: indexRange[0] + generatedId,
     debug: {
