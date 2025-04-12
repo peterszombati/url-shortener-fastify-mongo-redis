@@ -4,7 +4,7 @@ export function calculateIdFromNumberArrayAndRange(numbers: number[], indexRange
   let r = range
   let bytesCanBeUsed = 0
   for (let i = 0; i < numbers.length; i++) {
-    r = r - Math.floor(r / 256);
+    r = (r - r % 256) / 256;
     bytesCanBeUsed += 1;
     if (r < 1) {
       break;
