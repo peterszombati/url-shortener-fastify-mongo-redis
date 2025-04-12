@@ -45,9 +45,10 @@ app.setErrorHandler((error, request, reply) => {
     });
   } else {
     reply.status(500).send({
-      statusCode: 500,
-      error: 'Internal Server Error',
-      message: 'An unexpected error occurred',
+      status: {
+        success: false,
+        message: 'Internal Server Error: An unexpected error occurred',
+      },
     });
   }
 });
