@@ -19,7 +19,8 @@ export async function generateURL(
   expireAt = expireAt || new Date(new Date().getTime() + SEVEN_DAYS_IN_MS);
   return await mongoTransaction(async (session) => {
     const usedIndex = randomInteger({ min: 0, range: 238326 });
-    const { generatedId, shortened } = longToShort(longUrl, [usedIndex, usedIndex]);
+    const indexRange: [number, number] = [usedIndex, usedIndex];
+    const { generatedId, shortened } = longToShort(longUrl, indexRange);
     return await saveURL({
       longUrl,
       alias: shortened,
@@ -31,7 +32,7 @@ export async function generateURL(
       if (e.code !== 11000) {
         throw e;
       }
-      const id = await generateUniqueId(generatedId, [usedIndex, usedIndex]);
+      const id = await generateUniqueId(generatedId, indexRange);
       return saveURL({ longUrl, alias: toBase62(id), generatedId: id, userId, expireAt, session });
     });
   });
