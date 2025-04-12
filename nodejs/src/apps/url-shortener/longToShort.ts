@@ -15,7 +15,7 @@ export function longToShort(
   if (indexRange[0] > indexRange[1] || indexRange[0] < 0 || indexRange[0] % 1 != 0) {
     throw new Error('Invalid index');
   }
-  const buffer = Array.from(sha256numbers(longUrl));
+  const buffer = sha256numbers(longUrl);
   const generatedId = generateIdFromRange(buffer, indexRange);
   const shortenString = toBase62(generatedId.result);
   // 238327*238329 = [61,61,61,61,61,61].reduce((a,b,i)=>a+b*Math.pow(62,i))
