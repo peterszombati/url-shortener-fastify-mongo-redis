@@ -1,6 +1,6 @@
 import { FastifyInstance, FastifyRequest } from 'fastify';
 import { resolveURL } from '../url-shortener/resolveURL';
-import { apiKeyAuthentication as auth } from '../api-key-authentication/middleware';
+import { apiKeyAuthentication as apiKey } from '../api-key-authentication/middleware';
 import { ResponseError } from './ResponseError';
 import { handleAnalytics } from '../analytics/handleAnalytics';
 import { createCustomURL } from '../url-shortener/createCustomURL';
@@ -9,7 +9,7 @@ import { generateURL } from '../url-shortener/generateURL';
 export const routes = async (app: FastifyInstance) => {
   app.post<{
     Body: { originalUrl?: string; expiresAt?: string; customAlias?: string };
-  }>('/shorten', { preHandler: [auth.resolveUserMiddleware, auth.authMiddleware] }, async (req) => {
+  }>('/shorten', { preHandler: [apiKey.resolveUser, apiKey.auth] }, async (req) => {
     if (!req.body.originalUrl || typeof req.body.originalUrl != 'string') {
       throw new ResponseError({ statusCode: 400, message: 'invalid request body' });
     }
@@ -27,11 +27,12 @@ export const routes = async (app: FastifyInstance) => {
       }
     }
 
+    req.context
     let alias;
     if (req.body.customAlias) {
       alias = await createCustomURL(
+        req.context,
         req.body.originalUrl as string,
-        req.context?.['api-key-authentication'].userId,
         {
           expireAt: req.body.expiresAt ? new Date(req.body.expiresAt) : undefined,
           customAlias: req.body.customAlias,
@@ -39,8 +40,8 @@ export const routes = async (app: FastifyInstance) => {
       );
     } else {
       alias = await generateURL(
+        req.context,
         req.body.originalUrl as string,
-        req.context?.['api-key-authentication'].userId,
         {
           expireAt: req.body.expiresAt ? new Date(req.body.expiresAt) : undefined,
         },

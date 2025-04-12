@@ -2,7 +2,7 @@ import { FastifyReply, FastifyRequest } from 'fastify';
 import { resolveUser } from './resolveUser';
 
 export const apiKeyAuthentication = {
-  resolveUserMiddleware: async (request: FastifyRequest) => {
+  resolveUser: async (request: FastifyRequest) => {
     const authorization = request.headers?.['authorization'];
     const userId = await resolveUser(authorization);
 
@@ -10,11 +10,11 @@ export const apiKeyAuthentication = {
       if (!request.context) {
         request.context = {};
       }
-      request.context['api-key-authentication'] = { userId };
+      request.context.userId = userId;
     }
   },
-  authMiddleware: async (request: FastifyRequest, reply: FastifyReply) => {
-    if (!request?.context?.['api-key-authentication']?.userId) {
+  auth: async (request: FastifyRequest, reply: FastifyReply) => {
+    if (request?.context?.userId === undefined) {
       return reply.status(401).send('Unauthorized');
     }
   },

@@ -2,12 +2,13 @@ import { saveURL } from './saveURL';
 import { fromBase62ToNumber } from '../utils/fromBase62ToNumber';
 import { mongoTransaction } from '../mongo/mongoTransaction';
 import { ResponseError } from '../http-handler/ResponseError';
+import {RequestContext} from "../http-handler";
 
 const SEVEN_DAYS_IN_MS = 604800000;
 
 export async function createCustomURL(
+  context: RequestContext,
   longUrl: string,
-  userId: string,
   {
     customAlias,
     expireAt,
@@ -21,10 +22,10 @@ export async function createCustomURL(
       ? fromBase62ToNumber(customAlias)
       : undefined;
     return await saveURL({
+      context,
       longUrl,
       alias: customAlias,
       generatedId,
-      userId,
       expireAt: expireAt || new Date(new Date().getTime() + SEVEN_DAYS_IN_MS),
       session,
     }).catch((e) => {

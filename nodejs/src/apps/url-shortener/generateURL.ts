@@ -4,12 +4,13 @@ import { mongoTransaction } from '../mongo/mongoTransaction';
 import { generateUniqueId } from './generateUniqueId';
 import { toBase62 } from '../utils/toBase62';
 import { randomInteger } from '../utils/randomInteger';
+import {RequestContext} from "../http-handler";
 
 const SEVEN_DAYS_IN_MS = 604800000;
 
 export async function generateURL(
+  context: RequestContext,
   longUrl: string,
-  userId: string,
   {
     expireAt,
   }: {
@@ -22,10 +23,10 @@ export async function generateURL(
     const indexRange: [number, number] = [usedIndex, usedIndex];
     const { generatedId, shortened } = longToShort(longUrl, indexRange);
     return await saveURL({
+      context,
       longUrl,
       alias: shortened,
       generatedId,
-      userId,
       expireAt: expireAt,
       session,
     }).catch(async (e) => {
@@ -33,7 +34,7 @@ export async function generateURL(
         throw e;
       }
       const id = await generateUniqueId(generatedId, indexRange);
-      return saveURL({ longUrl, alias: toBase62(id), generatedId: id, userId, expireAt, session });
+      return saveURL({ longUrl, alias: toBase62(id), generatedId: id, context, expireAt, session });
     });
   });
 }

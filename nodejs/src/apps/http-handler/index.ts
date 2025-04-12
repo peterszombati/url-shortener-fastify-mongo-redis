@@ -3,9 +3,13 @@ import { routes } from './routes';
 import CORS from '@fastify/cors';
 import { ResponseError } from './ResponseError';
 
+export type RequestContext = Record<string, any> & {
+  userId?: string
+} | undefined;
+
 declare module 'fastify' {
   interface FastifyRequest {
-    context?: Record<string, any>;
+    context?: RequestContext
   }
 }
 

@@ -1,7 +1,8 @@
 import { urlRatelimit } from './db/url-ratelimit';
 import { ResponseError } from '../http-handler/ResponseError';
+import {RequestContext} from "../http-handler";
 
-export async function rateLimit(userId: string) {
+export async function rateLimit(context: RequestContext) {
   const date = new Date();
   const utcDate = new Date(`${date.getUTCFullYear()}-01-01T00:00:00.000Z`);
   utcDate.setUTCMonth(date.getUTCMonth());
@@ -10,7 +11,8 @@ export async function rateLimit(userId: string) {
   const result = await urlRatelimit.model.findOne(
     {
       utcDate,
-      userId,
+      // @ts-ignore
+      userId: context.userId,
     },
     {},
     { projection: { count: 1, _id: 0 } },

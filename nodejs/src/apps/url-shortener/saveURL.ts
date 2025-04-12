@@ -2,34 +2,36 @@ import { rateLimit } from './rateLimit';
 import { url } from './db/url';
 import { rateLimitSave } from './rateLimitSave';
 import { ClientSession } from 'mongoose';
+import {RequestContext} from "../http-handler";
 
 export async function saveURL({
+  context,
   longUrl,
   alias,
   generatedId,
-  userId,
   expireAt,
   session,
 }: {
+  context: RequestContext;
   longUrl: string;
   alias: string;
   generatedId?: number | undefined;
-  userId: string;
   expireAt: Date;
   session: ClientSession | null;
 }) {
-  await rateLimit(userId);
+  await rateLimit(context);
 
   const newUrl = new url.model({
     alias,
     longUrl,
     generatedId,
-    userId,
+    // @ts-ignore
+    userId: context.userId,
     createdAt: new Date(),
     expireAt,
   });
 
   await newUrl.save({ session });
-  rateLimitSave(userId, session).catch((e) => console.error(e));
+  rateLimitSave(context, session).catch((e) => console.error(e));
   return alias;
 }
