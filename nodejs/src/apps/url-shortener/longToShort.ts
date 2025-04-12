@@ -1,5 +1,5 @@
 import { toBase62 } from '../utils/toBase62';
-import { calculateIdFromNumberArrayAndRange } from './calculateIdFromNumberArrayAndRange';
+import { generateIdFromRange } from './generateIdFromRange';
 import { sha256numbers } from '../crypto/sha256numbers';
 
 export function longToShort(
@@ -16,7 +16,7 @@ export function longToShort(
     throw new Error('Invalid index');
   }
   const buffer = Array.from(sha256numbers(longUrl));
-  const generatedId = calculateIdFromNumberArrayAndRange(buffer, indexRange);
+  const generatedId = generateIdFromRange(buffer, indexRange);
   const shortenString = toBase62(generatedId.result);
   // 238327*238329 = [61,61,61,61,61,61].reduce((a,b,i)=>a+b*Math.pow(62,i))
   return {
