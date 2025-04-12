@@ -3,7 +3,7 @@ import { saveURL } from './saveURL';
 import { mongoTransaction } from '../mongo/mongoTransaction';
 import { generateUniqueId } from './generateUniqueId';
 import { toBase62 } from '../utils/toBase62';
-import {randomInteger} from "../utils/randomInteger";
+import { randomInteger } from '../utils/randomInteger';
 
 const SEVEN_DAYS_IN_MS = 604800000;
 
@@ -18,7 +18,7 @@ export async function generateURL(
 ) {
   expireAt = expireAt || new Date(new Date().getTime() + SEVEN_DAYS_IN_MS);
   return await mongoTransaction(async (session) => {
-    const usedIndex = randomInteger({min: 0, range: 238326})
+    const usedIndex = randomInteger({ min: 0, range: 238326 });
     const { generatedId, shortened } = longToShort(longUrl, [usedIndex, usedIndex]);
     return await saveURL({
       longUrl,
