@@ -1,6 +1,6 @@
-import { url } from './db/url';
 import { ResponseError } from '../http-handler/ResponseError';
 import { randomInteger } from '../utils/randomInteger';
+import {alias} from "./db/alias";
 
 export const generateUniqueId = async (
   id: number | undefined,
@@ -13,7 +13,7 @@ export const generateUniqueId = async (
   if (id !== undefined) {
     for (let i = 1; i < 4 && exists && min <= i && max >= i; i++) {
       uniqueId = id + i;
-      exists = (await url.model.countDocuments({ generatedId: uniqueId })) > 0;
+      exists = (await alias.model.countDocuments({ generatedId: uniqueId })) > 0;
       tried += 1;
     }
   }
@@ -26,7 +26,7 @@ export const generateUniqueId = async (
       });
     }
     uniqueId = randomInteger({ min, max });
-    exists = (await url.model.countDocuments({ generatedId: uniqueId })) > 0;
+    exists = (await alias.model.countDocuments({ generatedId: uniqueId })) > 0;
     tried += 1;
   }
 

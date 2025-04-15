@@ -1,8 +1,9 @@
 import { rateLimit } from './rateLimit';
-import { url } from './db/url';
+import { alias as aliasMongo } from './db/alias';
 import { rateLimitSave } from './rateLimitSave';
 import { ClientSession } from 'mongoose';
 import {RequestContext} from "../http-handler";
+import {customAlias} from "./db/custom-alias";
 
 export async function saveURL({
   context,
@@ -21,16 +22,28 @@ export async function saveURL({
 }) {
   await rateLimit(context);
 
-  const newUrl = new url.model({
-    alias,
-    longUrl,
-    generatedId,
-    // @ts-ignore
-    userId: context.userId,
-    createdAt: new Date(),
-    expireAt,
-  });
-
+  let newUrl;
+  if (generatedId === undefined) {
+    newUrl = new customAlias.model({
+      alias,
+      longUrl,
+      // @ts-ignore
+      userId: context.userId,
+      createdAt: new Date(),
+      expireAt,
+    });
+    await newUrl.save({ session });
+  } else {
+    newUrl = new aliasMongo.model({
+      alias,
+      longUrl,
+      generatedId,
+      // @ts-ignore
+      userId: context.userId,
+      createdAt: new Date(),
+      expireAt,
+    });
+  }
   await newUrl.save({ session });
   rateLimitSave(context, session).catch((e) => console.error(e));
   return alias;
