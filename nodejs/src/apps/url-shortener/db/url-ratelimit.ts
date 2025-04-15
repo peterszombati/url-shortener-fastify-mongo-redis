@@ -8,6 +8,7 @@ const schema = new Schema({
 });
 
 schema.index({ userId: 1 });
+schema.index({ createdAt: 1 }, { expireAfterSeconds: 172800 });
 
 export const urlRatelimit = {
   schema,
