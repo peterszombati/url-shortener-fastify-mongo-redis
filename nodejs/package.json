@@ -1,8 +1,8 @@
 {
   "private": true,
   "scripts": {
-    "start": "MONGO_URL=mongodb://localhost:27017/database node dist/apps/index",
-    "dev": "MONGO_URL=mongodb://localhost:27017/database nodemon src/apps/index",
+    "start": "DEV=1 MONGO_URL=mongodb://localhost:27017/database node dist/apps/index",
+    "dev": "DEV=1 MONGO_URL=mongodb://localhost:27017/database nodemon src/apps/index",
     "lint": "eslint . --ext .ts",
     "format": "prettier . --write"
   },
