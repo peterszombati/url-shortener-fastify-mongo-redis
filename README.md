@@ -1,10 +1,9 @@
-## start
+## start development
 
 ```
 docker compose up
 cd nodejs
-tsc
-npm run start
+npm run dev
 ```
 
 ### cURLs
