@@ -1,4 +1,4 @@
-import { Job, Queue as BullMQQueue, QueueEvents, Worker } from 'bullmq';
+import { Job, JobsOptions, Queue as BullMQQueue, QueueEvents, Worker, WorkerOptions } from 'bullmq';
 import { ConnectionOptions } from 'bullmq/dist/esm/interfaces/redis-options';
 
 export const Queue = <A, B, C>(
@@ -16,23 +16,23 @@ export const Queue = <A, B, C>(
 
   return {
     queue,
-    worker: async (params: C) => {
+    worker: async (params: C, opts?: WorkerOptions) => {
       const w = new Worker(
         name,
         async (job: Job) => {
           return func(job.data, params);
         },
-        { connection },
+        { connection, ...opts },
       );
       await w.waitUntilReady();
     },
-    add: async (params: A): Promise<void> => {
-      await queue.add(name, params);
+    add: async (params: A, opts?: JobsOptions): Promise<void> => {
+      await queue.add(name, params, opts);
     },
-    request: async (params: A): Promise<B> => {
-      const job = await queue.add(name, params);
+    request: async (params: A, opts?: JobsOptions, ttl?: number): Promise<B> => {
+      const job = await queue.add(name, params, opts);
       await queueEvents.waitUntilReady();
-      return await job.waitUntilFinished(queueEvents);
+      return await job.waitUntilFinished(queueEvents, ttl);
     },
   };
 };
