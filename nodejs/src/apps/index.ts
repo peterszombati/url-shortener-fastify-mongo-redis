@@ -1,6 +1,6 @@
 import app from './http-handler';
 import { mongo } from './mongo/init';
-import {saveRedirect} from "./analytics/saveRedirect";
+import { saveRedirect } from './analytics/saveRedirect';
 
 const start = async () => {
   if (!process.env.MONGO_URL) {
