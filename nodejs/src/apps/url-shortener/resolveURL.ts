@@ -13,7 +13,7 @@ export async function resolveURL(alias: string): Promise<string | null> {
   }
 
   const date = new Date();
-  saveRedirect(doc.alias, date).catch((e) => console.error(e));
+  saveRedirect.add({alias: doc.alias, date}).catch(e => console.error(e));
 
   return doc.longUrl;
 }

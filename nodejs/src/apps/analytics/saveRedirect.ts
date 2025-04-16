@@ -1,9 +1,14 @@
-import { analyticsRedirects } from './db/analytics-redirects';
+import {analyticsRedirects} from './db/analytics-redirects';
+import {Queue} from "../queue/Queue";
+import {redis} from "../redis/connection";
 
-export async function saveRedirect(alias: string, date: Date) {
+export const saveRedirect = Queue(redis.connection, "analytics/saveRedirect", async ({alias, date}: {
+  alias: string,
+  date: Date
+}) => {
   const entity = new analyticsRedirects.model({
     alias,
     createdAt: date,
   });
   await entity.save();
-}
+})
