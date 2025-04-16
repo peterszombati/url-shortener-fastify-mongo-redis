@@ -1,12 +1,10 @@
 import { model, Schema } from 'mongoose';
 
 const schema = new Schema({
-  userId: { type: String, required: true },
+  userId: { type: String, required: true, index: true },
   key: { type: String, required: true },
   createdAt: { type: Date, default: Date.now },
 });
-
-schema.index({ userId: 1 });
 
 export const apiKeyAuthentication = {
   schema,

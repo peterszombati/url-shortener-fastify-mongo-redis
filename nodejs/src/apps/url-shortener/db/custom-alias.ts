@@ -1,7 +1,7 @@
 import { model, Schema } from 'mongoose';
 
 const schema = new Schema({
-  alias: { type: String, required: true, unique: true },
+  alias: { type: String, required: true, unique: true, index: true },
   longUrl: { type: String, required: true },
   userId: { type: String, required: true },
   expireAt: { type: Date, required: true },
@@ -9,7 +9,6 @@ const schema = new Schema({
 });
 
 schema.index({ expireAt: 1 }, { expireAfterSeconds: 0 });
-schema.index({ alias: 1 });
 
 export const customAlias = {
   schema,
