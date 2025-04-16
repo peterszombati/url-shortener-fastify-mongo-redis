@@ -22,6 +22,8 @@ export function luaScript(script: string) {
       } catch (e: any) {
         if (e?.message?.includes('NOSCRIPT')) {
           await init();
+        } else {
+          throw e
         }
         // @ts-ignore
         return redis.connection.evalsha(scriptSha, keys.length, ...keys, ...args);
