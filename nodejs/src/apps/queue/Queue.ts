@@ -1,5 +1,6 @@
 import { Job, JobsOptions, Queue as BullMQQueue, QueueEvents, Worker, WorkerOptions } from 'bullmq';
 import { ConnectionOptions } from 'bullmq/dist/esm/interfaces/redis-options';
+import {toJSON} from "../utils/toJSON";
 
 export const Queue = <A, B, C>(
   connection: ConnectionOptions,
@@ -20,17 +21,26 @@ export const Queue = <A, B, C>(
       const w = new Worker(
         name,
         async (job: Job) => {
-          return func(job.data, params);
+          try {
+            return func(job.data, params);
+          } catch (e) {
+            throw {
+              constructor: {
+                name: e?.constructor?.name
+              },
+              data: toJSON(e)
+            }
+          }
         },
         { connection, ...opts },
       );
       await w.waitUntilReady();
     },
     add: async (params: A, opts?: JobsOptions): Promise<void> => {
-      await queue.add(name, params, opts);
+      await queue.add('', params, opts);
     },
     request: async (params: A, opts?: JobsOptions, ttl?: number): Promise<B> => {
-      const job = await queue.add(name, params, opts);
+      const job = await queue.add('', params, opts);
       await queueEvents.waitUntilReady();
       return await job.waitUntilFinished(queueEvents, ttl);
     },

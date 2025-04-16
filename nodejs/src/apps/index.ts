@@ -2,6 +2,7 @@ import app from './http-handler';
 import { mongo } from './mongo/init';
 import { saveRedirect } from './analytics/saveRedirect';
 import { generateURL } from './url-shortener/generateURL';
+import { createCustomURL } from './url-shortener/createCustomURL';
 
 const start = async () => {
   if (!process.env.MONGO_URL) {
@@ -10,6 +11,7 @@ const start = async () => {
   await mongo.init(process.env.MONGO_URL);
   await Promise.all([
     saveRedirect.worker({}),
+    createCustomURL.worker({}),
     generateURL.worker([0, 119163]),
     generateURL.worker([119164, 238326]),
   ]);
