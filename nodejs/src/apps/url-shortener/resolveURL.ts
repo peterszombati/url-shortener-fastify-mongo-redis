@@ -12,8 +12,7 @@ export async function resolveURL(alias: string): Promise<string | null> {
     return null;
   }
 
-  const date = new Date();
-  saveRedirect.add({ alias: doc.alias, date }).catch((e) => console.error(e));
+  saveRedirect.add({ alias: doc.alias, date: new Date() }).catch((e) => console.error(e));
 
   return doc.longUrl;
 }
