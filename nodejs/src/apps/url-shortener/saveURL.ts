@@ -32,7 +32,6 @@ export async function saveURL({
       createdAt: new Date(),
       expireAt,
     });
-    await newUrl.save({ session });
   } else {
     newUrl = new aliasMongo.model({
       alias,

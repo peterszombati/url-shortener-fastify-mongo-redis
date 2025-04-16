@@ -27,7 +27,6 @@ export const routes = async (app: FastifyInstance) => {
       }
     }
 
-    req.context
     let alias;
     if (req.body.customAlias) {
       alias = await createCustomURL(
