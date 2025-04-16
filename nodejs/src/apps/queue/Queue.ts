@@ -35,13 +35,25 @@ export const Queue = <A, B, C>(
               ];
             }
           } catch (e) {
-            return [
-              0,
-              {
-                name: Object.getPrototypeOf(e)?.constructor?.name,
-                data: toJSON(e),
-              },
-            ];
+            try {
+              return [
+                0,
+                {
+                  name: Object.getPrototypeOf(e)?.constructor?.name,
+                  data: toJSON(e),
+                },
+              ];
+            } catch(e: any) {
+              return [
+                0,
+                {
+                  name: Object.getPrototypeOf(e)?.constructor?.name,
+                  data: {
+                    message: typeof e?.message == "string" ? e.message : undefined
+                  },
+                },
+              ];
+            }
           }
         },
         { connection, ...opts },
