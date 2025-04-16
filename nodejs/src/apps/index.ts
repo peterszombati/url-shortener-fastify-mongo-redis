@@ -1,13 +1,14 @@
 import app from './http-handler';
 import { mongo } from './mongo/init';
 import { saveRedirect } from './analytics/saveRedirect';
+import { generateURL } from './url-shortener/generateURL';
 
 const start = async () => {
   if (!process.env.MONGO_URL) {
     throw new Error('Invalid process.env.MONGO_URL');
   }
   await mongo.init(process.env.MONGO_URL);
-  await saveRedirect.worker();
+  await Promise.all([saveRedirect.worker(), generateURL.worker()]);
   await app.listen({ port: 3000 });
 };
 

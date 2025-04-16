@@ -34,7 +34,9 @@ export const routes = async (app: FastifyInstance) => {
         customAlias: req.body.customAlias,
       });
     } else {
-      alias = await generateURL(req.context, req.body.originalUrl as string, {
+      alias = await generateURL.request({
+        context: req.context,
+        longUrl: req.body.originalUrl as string,
         expireAt: req.body.expiresAt ? new Date(req.body.expiresAt) : undefined,
       });
     }
