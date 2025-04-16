@@ -2,6 +2,7 @@
   "private": true,
   "scripts": {
     "start": "MONGO_URL=mongodb://localhost:27017/database node dist/apps/index",
+    "dev": "MONGO_URL=mongodb://localhost:27017/database nodemon src/apps/index",
     "lint": "eslint . --ext .ts",
     "format": "prettier . --write"
   },
@@ -29,6 +30,7 @@
     "eslint-plugin-promise": "7.2.1",
     "eslint-plugin-unused-imports": "4.1.4",
     "mocha": "10.4.0",
+    "nodemon": "^3.1.9",
     "prettier": "3.5.3",
     "ts-node": "10.9.2",
     "typescript": "5.8.3",
