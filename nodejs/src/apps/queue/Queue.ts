@@ -1,5 +1,5 @@
-import {Job, Queue as BullMQQueue, QueueEvents, Worker} from 'bullmq';
-import {ConnectionOptions} from 'bullmq/dist/esm/interfaces/redis-options';
+import { Job, Queue as BullMQQueue, QueueEvents, Worker } from 'bullmq';
+import { ConnectionOptions } from 'bullmq/dist/esm/interfaces/redis-options';
 
 export const Queue = <A, B, C>(
   connection: ConnectionOptions,
@@ -11,8 +11,8 @@ export const Queue = <A, B, C>(
   queue: BullMQQueue;
   worker: (params: C) => Promise<void>;
 } => {
-  const queue = new BullMQQueue(name, {connection});
-  const queueEvents = new QueueEvents(name, {connection});
+  const queue = new BullMQQueue(name, { connection });
+  const queueEvents = new QueueEvents(name, { connection });
 
   return {
     queue,
@@ -22,7 +22,7 @@ export const Queue = <A, B, C>(
         async (job: Job) => {
           return func(job.data, params);
         },
-        {connection},
+        { connection },
       );
       await w.waitUntilReady();
     },

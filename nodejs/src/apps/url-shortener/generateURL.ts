@@ -12,15 +12,18 @@ const SEVEN_DAYS_IN_MS = 604800000;
 export const generateURL = Queue(
   redis.connection,
   'url-shortener/generateURL',
-  async ({
-    context,
-    longUrl,
-    expireAt,
-  }: {
-    context: RequestContext;
-    longUrl: string;
-    expireAt?: Date;
-  }, worker: [number, number]) => {
+  async (
+    {
+      context,
+      longUrl,
+      expireAt,
+    }: {
+      context: RequestContext;
+      longUrl: string;
+      expireAt?: Date;
+    },
+    worker: [number, number],
+  ) => {
     expireAt = expireAt || new Date(new Date().getTime() + SEVEN_DAYS_IN_MS);
     return await mongoTransaction(async (session) => {
       const indexRange: [number, number] = [worker[0], worker[1]];
