@@ -6,6 +6,7 @@ import { toBase62 } from '../utils/toBase62';
 import { RequestContext } from '../http-handler';
 import { Queue } from '../queue/Queue';
 import { redis } from '../redis/connection';
+import { rateLimit } from './rateLimit';
 
 const SEVEN_DAYS_IN_MS = 604800000;
 
@@ -26,6 +27,8 @@ export const generateURL = Queue(
   ) => {
     expireAt = expireAt || new Date(new Date().getTime() + SEVEN_DAYS_IN_MS);
     return await mongoTransaction(async (session) => {
+      const date = new Date();
+      await rateLimit(context, date);
       const indexRange: [number, number] = [worker[0], worker[1]];
       const { generatedId, shortened } = longToShort(longUrl, indexRange);
       return await saveURL({

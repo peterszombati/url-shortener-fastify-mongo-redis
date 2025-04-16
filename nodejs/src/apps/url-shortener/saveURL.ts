@@ -1,4 +1,3 @@
-import { rateLimit } from './rateLimit';
 import { alias as aliasMongo } from './db/alias';
 import { rateLimitSave } from './rateLimitSave';
 import { ClientSession } from 'mongoose';
@@ -20,9 +19,6 @@ export async function saveURL({
   expireAt: Date;
   session: ClientSession | null;
 }) {
-  const date = new Date();
-  await rateLimit(context, date);
-
   let newUrl;
   if (generatedId === undefined) {
     newUrl = new customAlias.model({

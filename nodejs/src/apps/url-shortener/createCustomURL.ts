@@ -5,6 +5,7 @@ import { ResponseError } from '../http-handler/ResponseError';
 import { RequestContext } from '../http-handler';
 import { Queue } from '../queue/Queue';
 import { redis } from '../redis/connection';
+import { rateLimit } from './rateLimit';
 
 const SEVEN_DAYS_IN_MS = 604800000;
 
@@ -23,6 +24,8 @@ export const createCustomURL = Queue(
     expireAt?: Date;
   }) => {
     return await mongoTransaction(async (session) => {
+      const date = new Date();
+      await rateLimit(context, date);
       const generatedId = customAlias.match(/^[a-zA-Z0-9]{6}$/g)
         ? fromBase62ToNumber(customAlias)
         : undefined;
