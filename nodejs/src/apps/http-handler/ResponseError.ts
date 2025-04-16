@@ -3,20 +3,21 @@ export class ResponseError extends Error {
   data: any;
   result: any;
 
-  constructor({
-    statusCode,
-    data,
-    result,
-    message,
-  }: {
-    statusCode?: number;
-    data?: any;
-    result?: any;
-    message?: string;
-  }) {
-    super(message || '');
-    this.statusCode = statusCode;
-    this.data = data;
-    this.result = result;
+  constructor(
+    params:
+      | {
+          statusCode?: number;
+          data?: any;
+          result?: any;
+          message?: string;
+        }
+      | undefined = undefined,
+  ) {
+    super(params?.message || '');
+    if (params) {
+      this.statusCode = params.statusCode;
+      this.data = params.data;
+      this.result = params.result;
+    }
   }
 }
