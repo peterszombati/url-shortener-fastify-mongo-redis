@@ -11,7 +11,7 @@ export const Queue = <A, B, C>(
   add: (params: A) => Promise<void>;
   request: (params: A) => Promise<B>;
   queue: BullMQQueue;
-  worker: (params: C) => Promise<void>;
+  worker: (params: C) => Promise<Worker>;
 } => {
   const queue = new BullMQQueue(name, { connection });
   const queueEvents = new QueueEvents(name, { connection });
@@ -47,6 +47,7 @@ export const Queue = <A, B, C>(
         { connection, ...opts },
       );
       await w.waitUntilReady();
+      return w;
     },
     add: async (params: A, opts?: JobsOptions): Promise<void> => {
       await queue.add('', params, opts);
