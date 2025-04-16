@@ -3,6 +3,8 @@ import { mongo } from './mongo/init';
 import { saveRedirect } from './analytics/saveRedirect';
 import { generateURL } from './url-shortener/generateURL';
 import { createCustomURL } from './url-shortener/createCustomURL';
+import {perDay} from "./redis-rate-limit/perDay";
+import {saveRateLimit} from "./redis-rate-limit/saveRateLimit";
 
 const start = async () => {
   if (!process.env.MONGO_URL) {
@@ -10,6 +12,8 @@ const start = async () => {
   }
   await mongo.init(process.env.MONGO_URL);
   await Promise.all([
+    perDay.init(),
+    saveRateLimit.init(),
     saveRedirect.worker({}),
     createCustomURL.worker({}),
     generateURL.worker([0, 119163]),

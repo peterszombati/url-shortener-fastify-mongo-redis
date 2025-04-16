@@ -20,7 +20,8 @@ export async function saveURL({
   expireAt: Date;
   session: ClientSession | null;
 }) {
-  await rateLimit(context);
+  const date = new Date();
+  await rateLimit(context, date);
 
   let newUrl;
   if (generatedId === undefined) {
@@ -44,6 +45,7 @@ export async function saveURL({
     });
   }
   await newUrl.save({ session });
-  rateLimitSave(context, session).catch((e) => console.error(e));
+  // @ts-ignore
+  await rateLimitSave(context.userId, date).catch((e) => console.error(e));
   return alias;
 }
