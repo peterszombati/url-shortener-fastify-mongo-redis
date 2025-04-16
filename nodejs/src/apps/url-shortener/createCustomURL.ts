@@ -36,6 +36,7 @@ export const createCustomURL = Queue(
         generatedId,
         expireAt: expireAt || new Date(new Date().getTime() + SEVEN_DAYS_IN_MS),
         session,
+        date,
       }).catch((e) => {
         if (e.code !== 11000) {
           throw e;

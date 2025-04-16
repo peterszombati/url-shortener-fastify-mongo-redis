@@ -11,6 +11,7 @@ export async function saveURL({
   generatedId,
   expireAt,
   session,
+  date,
 }: {
   context: RequestContext;
   longUrl: string;
@@ -18,6 +19,7 @@ export async function saveURL({
   generatedId?: number | undefined;
   expireAt: Date;
   session: ClientSession | null;
+  date: Date;
 }) {
   let newUrl;
   if (generatedId === undefined) {

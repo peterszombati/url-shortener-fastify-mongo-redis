@@ -38,6 +38,7 @@ export const generateURL = Queue(
         generatedId,
         expireAt: expireAt,
         session,
+        date,
       }).catch(async (e) => {
         if (e.code !== 11000) {
           throw e;
@@ -50,6 +51,7 @@ export const generateURL = Queue(
           context,
           expireAt,
           session,
+          date,
         });
       });
     });
