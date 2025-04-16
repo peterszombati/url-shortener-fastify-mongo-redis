@@ -8,7 +8,7 @@ const start = async () => {
     throw new Error('Invalid process.env.MONGO_URL');
   }
   await mongo.init(process.env.MONGO_URL);
-  await Promise.all([saveRedirect.worker(), generateURL.worker()]);
+  await Promise.all([saveRedirect.worker({}), generateURL.worker([0, 119163]), generateURL.worker([119164, 238326])]);
   await app.listen({ port: 3000 });
 };
 

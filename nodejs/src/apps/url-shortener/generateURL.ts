@@ -3,7 +3,6 @@ import { saveURL } from './saveURL';
 import { mongoTransaction } from '../mongo/mongoTransaction';
 import { generateUniqueId } from './generateUniqueId';
 import { toBase62 } from '../utils/toBase62';
-import { randomInteger } from '../utils/randomInteger';
 import { RequestContext } from '../http-handler';
 import { Queue } from '../queue/Queue';
 import { redis } from '../redis/connection';
@@ -21,11 +20,10 @@ export const generateURL = Queue(
     context: RequestContext;
     longUrl: string;
     expireAt?: Date;
-  }) => {
+  }, worker: [number, number]) => {
     expireAt = expireAt || new Date(new Date().getTime() + SEVEN_DAYS_IN_MS);
     return await mongoTransaction(async (session) => {
-      const usedIndex = randomInteger({ min: 0, range: 238326 });
-      const indexRange: [number, number] = [usedIndex, usedIndex];
+      const indexRange: [number, number] = [worker[0], worker[1]];
       const { generatedId, shortened } = longToShort(longUrl, indexRange);
       return await saveURL({
         context,

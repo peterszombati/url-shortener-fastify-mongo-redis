@@ -1,28 +1,28 @@
-import { Queue as BullMQQueue, QueueEvents, Worker } from 'bullmq';
-import { ConnectionOptions } from 'bullmq/dist/esm/interfaces/redis-options';
+import {Job, Queue as BullMQQueue, QueueEvents, Worker} from 'bullmq';
+import {ConnectionOptions} from 'bullmq/dist/esm/interfaces/redis-options';
 
-export const Queue = <A, B>(
+export const Queue = <A, B, C>(
   connection: ConnectionOptions,
   name: string,
-  func: (params: A) => B,
+  func: (params: A, worker: C) => B,
 ): {
   add: (params: A) => Promise<void>;
   request: (params: A) => Promise<B>;
   queue: BullMQQueue;
-  worker: () => Promise<void>;
+  worker: (params: C) => Promise<void>;
 } => {
-  const queue = new BullMQQueue(name, { connection });
-  const queueEvents = new QueueEvents(name, { connection });
+  const queue = new BullMQQueue(name, {connection});
+  const queueEvents = new QueueEvents(name, {connection});
 
   return {
     queue,
-    worker: async () => {
+    worker: async (params: C) => {
       const w = new Worker(
         name,
-        async (job) => {
-          return func(job.data);
+        async (job: Job) => {
+          return func(job.data, params);
         },
-        { connection },
+        {connection},
       );
       await w.waitUntilReady();
     },
