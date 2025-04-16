@@ -1,7 +1,4 @@
-export function generateIdFromRange(
-  numbers: number[],
-  indexRange: [number, number],
-) {
+export function generateIdFromRange(numbers: number[], indexRange: [number, number]) {
   const range = (indexRange[1] - indexRange[0] + 1) * 238329 - 1;
 
   let r = range;

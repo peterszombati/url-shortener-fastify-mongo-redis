@@ -29,22 +29,14 @@ export const routes = async (app: FastifyInstance) => {
 
     let alias;
     if (req.body.customAlias) {
-      alias = await createCustomURL(
-        req.context,
-        req.body.originalUrl as string,
-        {
-          expireAt: req.body.expiresAt ? new Date(req.body.expiresAt) : undefined,
-          customAlias: req.body.customAlias,
-        },
-      );
+      alias = await createCustomURL(req.context, req.body.originalUrl as string, {
+        expireAt: req.body.expiresAt ? new Date(req.body.expiresAt) : undefined,
+        customAlias: req.body.customAlias,
+      });
     } else {
-      alias = await generateURL(
-        req.context,
-        req.body.originalUrl as string,
-        {
-          expireAt: req.body.expiresAt ? new Date(req.body.expiresAt) : undefined,
-        },
-      );
+      alias = await generateURL(req.context, req.body.originalUrl as string, {
+        expireAt: req.body.expiresAt ? new Date(req.body.expiresAt) : undefined,
+      });
     }
 
     return { shortUrl: 'http://localhost:3000/' + alias };

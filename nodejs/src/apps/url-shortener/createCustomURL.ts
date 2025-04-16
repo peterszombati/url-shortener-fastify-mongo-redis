@@ -2,7 +2,7 @@ import { saveURL } from './saveURL';
 import { fromBase62ToNumber } from '../utils/fromBase62ToNumber';
 import { mongoTransaction } from '../mongo/mongoTransaction';
 import { ResponseError } from '../http-handler/ResponseError';
-import {RequestContext} from "../http-handler";
+import { RequestContext } from '../http-handler';
 
 const SEVEN_DAYS_IN_MS = 604800000;
 

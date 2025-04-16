@@ -1,6 +1,6 @@
 import { urlRatelimit } from './db/url-ratelimit';
 import { ResponseError } from '../http-handler/ResponseError';
-import {RequestContext} from "../http-handler";
+import { RequestContext } from '../http-handler';
 
 export async function rateLimit(context: RequestContext) {
   const date = new Date();

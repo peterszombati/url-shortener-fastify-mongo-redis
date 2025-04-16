@@ -4,7 +4,7 @@ import { mongoTransaction } from '../mongo/mongoTransaction';
 import { generateUniqueId } from './generateUniqueId';
 import { toBase62 } from '../utils/toBase62';
 import { randomInteger } from '../utils/randomInteger';
-import {RequestContext} from "../http-handler";
+import { RequestContext } from '../http-handler';
 
 const SEVEN_DAYS_IN_MS = 604800000;
 

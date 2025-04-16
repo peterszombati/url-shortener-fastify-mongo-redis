@@ -1,6 +1,6 @@
 import { ResponseError } from '../http-handler/ResponseError';
 import { randomInteger } from '../utils/randomInteger';
-import {alias} from "./db/alias";
+import { alias } from './db/alias';
 
 export const generateUniqueId = async (
   id: number | undefined,
