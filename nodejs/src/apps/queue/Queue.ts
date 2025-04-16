@@ -23,7 +23,17 @@ export const Queue = <A, B, C>(
         name,
         async (job: Job) => {
           try {
-            return [1, await func(job.data, params)];
+            if (!job.name) {
+              return [1, await func(job.data, params)];
+            } else {
+              return [
+                0,
+                {
+                  name: 'Error',
+                  data: { message: 'Unhandled' },
+                },
+              ];
+            }
           } catch (e) {
             return [
               0,

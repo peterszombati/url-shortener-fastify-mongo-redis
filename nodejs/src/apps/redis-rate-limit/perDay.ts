@@ -1,4 +1,4 @@
-import { luaScript } from "../redis/luaScript";
+import { luaScript } from '../redis/luaScript';
 
 const script = `  local current = redis.call("INCR", KEYS[1] .. ":lock")
   local created = redis.call("GET", KEYS[1] .. ":created")
@@ -13,4 +13,4 @@ const script = `  local current = redis.call("INCR", KEYS[1] .. ":lock")
   end
   return 1`;
 
-export const perDay = luaScript(script)
+export const perDay = luaScript(script);

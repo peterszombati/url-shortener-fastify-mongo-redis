@@ -1,4 +1,4 @@
-import { luaScript } from "../redis/luaScript";
+import { luaScript } from '../redis/luaScript';
 
 const script = `  local current = redis.call("INCR", KEYS[1] .. ":created")
   local lock = redis.call("DECR", KEYS[1] .. ":lock")
@@ -10,4 +10,4 @@ const script = `  local current = redis.call("INCR", KEYS[1] .. ":created")
   end
   return 1`;
 
-export const saveRateLimit = luaScript(script)
+export const saveRateLimit = luaScript(script);
