@@ -9,8 +9,8 @@ export async function resolveUser(headerKey: string | undefined): Promise<string
   if (!userId || !key) {
     return null;
   }
-  const result = await apiKeyAuthentication.model.findOne({ userId }, { key: 1, _id: 0 });
-  if (result && result.key === key.join(':')) {
+  const result = await apiKeyAuthentication.model.countDocuments({ userId, key: key.join(':') }, { limit: 1 });
+  if (result > 0) {
     return userId;
   }
   return null;
