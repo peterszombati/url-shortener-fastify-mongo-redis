@@ -11,7 +11,7 @@ export function generateIdFromRange(numbers: number[], indexRange: [number, numb
     }
   }
 
-  const max = numbers.slice(0, bytesCanBeUsed).reduce((_p, _c, i) => 255 * Math.pow(256, i));
+  const max = numbers.slice(0, bytesCanBeUsed).reduce((p, _c, i) => p + 255 * Math.pow(256, i));
   const divider = max / range;
   const generatedId = Math.floor(
     numbers.slice(0, bytesCanBeUsed).reduce((p, c, i) => p + c * Math.pow(256, i)) / divider,
