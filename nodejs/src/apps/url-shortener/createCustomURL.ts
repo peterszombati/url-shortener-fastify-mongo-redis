@@ -25,10 +25,22 @@ export const createCustomURL = Queue(
   }) => {
     return await mongoTransaction(async (session) => {
       const date = new Date();
-      await rateLimit(context, date);
+      if (customAlias.match(/[\/\\]/g)) {
+        throw new ResponseError({
+          statusCode: 400,
+          message: "Invalid customAlias"
+        })
+      }
+      if (customAlias.length > 200) {
+        throw new ResponseError({
+          statusCode: 400,
+          message: "Too long customAlias"
+        })
+      }
       const generatedId = customAlias.match(/^[a-zA-Z0-9]{6}$/g)
         ? fromBase62ToNumber(customAlias)
         : undefined;
+      await rateLimit(context, date);
       return await saveURL({
         context,
         longUrl,
